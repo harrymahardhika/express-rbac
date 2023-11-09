@@ -10,9 +10,9 @@ module.exports = {
 
     for (let i = 0; i < 10; i++) {
       await User.create({
-        email: faker.internet.email(),
+        email: faker.internet.email().toLocaleLowerCase(),
         password: 'password',
-        name: faker.person.firstName(),
+        name: faker.person.fullName(),
         roleId: roles[Math.floor(Math.random() * roles.length)].id,
         createdAt: new Date(),
         updatedAt: new Date()

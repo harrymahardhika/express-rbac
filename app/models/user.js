@@ -1,5 +1,8 @@
 'use strict'
 const { Model } = require('sequelize')
+const bcrypt = require('bcrypt')
+const auth = require('../../config/auth')
+
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**
@@ -25,5 +28,15 @@ module.exports = (sequelize, DataTypes) => {
       modelName: 'User'
     }
   )
+
+  User.beforeCreate(async (user, options) => {
+    try {
+      const hash = await bcrypt.hash(user.password, auth.bcryptRound)
+      user.password = hash
+    } catch (err) {
+      throw new Error(err)
+    }
+  })
+
   return User
 }
