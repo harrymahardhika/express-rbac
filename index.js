@@ -1,9 +1,10 @@
 const express = require('express')
 const app = express()
 require('dotenv').config()
-const { User, Token, Role, Permission } = require('./app/models')
 const bcrypt = require('bcrypt')
 const randomString = require('randomstring')
+
+const { User, Token, Role, Permission } = require('./app/models')
 const allowedTo = require('./app/constants/permission')
 
 const port = process.env.APP_PORT || 3000
@@ -80,6 +81,24 @@ app.get('/protected', tokenAuth, async (req, res) => {
 app.get('/with-authorization', tokenAuth, permission(allowedTo.BROWSE_BOOKS), (req, res) => {
   res.json({
     message: 'This is a protected route with authorization'
+  })
+})
+
+app.get('/books', tokenAuth, permission(allowedTo.BROWSE_BOOKS), (req, res) => {
+  res.json({
+    message: 'Yoo this is your books'
+  })
+})
+
+app.get('/books/:id', tokenAuth, permission(allowedTo.READ_BOOK), (req, res) => {
+  res.json({
+    message: 'Yoo this is your book'
+  })
+})
+
+app.post('/books', tokenAuth, permission(allowedTo.ADD_BOOK), (req, res) => {
+  res.json({
+    message: `Yoo you've added a book`
   })
 })
 
